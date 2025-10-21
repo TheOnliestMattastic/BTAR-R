@@ -1,8 +1,7 @@
 function love.load()
 
     --loading libraries
-    require "lib/helper"
-    states = require "lib/states"
+
 
     --setting window/resolution info
     winWidth = 960

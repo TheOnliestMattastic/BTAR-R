@@ -90,7 +90,7 @@ function Combat.pickAnimTag(attacker, action)
     if CLASS.fire[attacker.class] then return "fire" end
     if CLASS.projectile[attacker.class] then return "pierce" end
     if CLASS.slash[attacker.class] then return "slash" end
-    if CLASS.bash[attacker.class] then return "swing" end
+    if CLASS.bash[attacker.class] then return "bash" end
     if CLASS.dual[attacker.class] then return "dslash" end
     return "slash"
 end
