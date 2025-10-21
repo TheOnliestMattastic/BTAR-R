@@ -29,10 +29,12 @@ function game.load()
     -- Create characters
     local charAnims = registry:getCharacter("NinjaDark")
     table.insert(characters, Character.new("NinjaDark",     2, 4, {hp=25, pwr=5, def=2, dex=5, spd=4, rng=2, team=0}))
-    ninjaDark.animations = charAnims
+    ninjaDark.spriteImage = charAnims.image
+    ninjaDark.anim = charAnims.animations.idle
     local charAnims = registry:getCharacter("GladiatorBlue")
     table.insert(characters, Character.new("GladiatorBlue",   2, 6, {hp=25, pwr=7, def=5, dex=3, spd=2, rng=1, team=1}))
-    gladiatorBlue.animations = charAnims
+    gladiatorBlue.spriteImage = charAnims.image
+    gladiatorBlue.anim = charAnims.animations.idle
     -- etc...
 end
 
@@ -109,6 +111,10 @@ function game.mousepressed(x, y, button)
         elseif result.type == "attack" then
             if result.result == "hit" then
                 -- play attack anim by tag
+                if fx then
+                    fx.anim:gotoFrame(1)
+                    table.insert(activeFX, {fx=fx, x=defender.x, y=defender.y})
+                end
 
                 -- show damage; if result.ko then update remaining counts and remove/flag unit
 
