@@ -1,6 +1,6 @@
 local menu = {}
-local font65 = love.graphics.newFont("alagard.ttf", 65)
-local font95 = love.graphics.newFont("alagard.ttf", 95)
+local font65 = love.graphics.newFont("assets/fonts/alagard.ttf", 65)
+local font95 = love.graphics.newFont("assets/fonts/alagard.ttf", 95)
 
 function menu.draw()
 
