@@ -19,6 +19,7 @@ I’ve started **rebuilding the game from the ground up** with best practices in
 1. **Modular Design**
    - Created a `Character` module (`character.lua`) that encapsulates stats, position, sprite, and methods like `update`, `draw`, `takeDamage`, and `heal`.
    - This replaces the old global `char` table with clean, object‑like entities.
+   - `game.lua` now imports `Character`, `GameState`, and `Map` instead of defining everything inline.
 
 2. **GameState Manager**
    - Built a `GameState` module (`gameState.lua`) to handle turns, action points, and win conditions.
@@ -37,9 +38,3 @@ I’ve started **rebuilding the game from the ground up** with best practices in
 - **Professionalism**: The repo will include a polished `README.md` and this `devlog.md` to show my growth and thought process.
 
 ---
-
-### Next Steps
-- Extract map logic into a `Map` module.
-- Build a reusable `UI` module for buttons and HUD elements.
-- Refactor input handling into a state machine (`idle → selecting → moving → attacking`).
-- Document the rebuild process with screenshots and GIFs for the GitHub README.

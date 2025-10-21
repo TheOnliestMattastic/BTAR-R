@@ -36,7 +36,7 @@ end
 function Character:draw(tileSize)
     if not self.alive then return end
     love.graphics.setColor(1, 1, 1, 1)
-    self.anim:draw(self.spriteSheet, self.x * tileSize, self.y * tileSize, nil, 3)
+    self.anim:draw(self.spriteSheet, self.x * tileSize, self.y * tileSize, nil, 2)
 end
 
 -- Take damage
