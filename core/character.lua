@@ -26,17 +26,11 @@ function Character.new(class, x, y, stats)
     self.alive = true
 
     -- Sprites & animation
-    self.spriteSheet = love.graphics.newImage("sprites/chars/"..class..".png")
+    self.spriteSheet = love.graphics.newImage("assets/sprites/chars/"..class.."/SpriteSheet.png")
     self.grid = anim8.newGrid(16, 16, self.spriteSheet:getWidth(), self.spriteSheet:getHeight())
-    self.anim = anim8.newAnimation(self.grid("1-2", 1), 0.2)
 
     return self
 end
-
--- Update animation
--- function Character:update(dt)
---     self.anim:update(dt)
--- end
 
 -- Draw character
 function Character:draw(tileSize)
