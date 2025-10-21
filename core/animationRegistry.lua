@@ -1,6 +1,9 @@
 -- core/animationRegistry.lua
 local anim8 = require "lib/anim8"
 
+-- compatibility: Lua 5.1 has global `unpack`, 5.2+ exposes `table.unpack`
+local _unpack = table and table.unpack or unpack
+
 local AnimationRegistry = {}
 AnimationRegistry.__index = AnimationRegistry
 
@@ -12,8 +15,9 @@ end
 
 local function makeAnimation(image, frameW, frameH, frames, duration)
   local grid = anim8.newGrid(frameW, frameH, image:getWidth(), image:getHeight())
+  local _unpack = table.unpack or unpack
   -- frames is a list like {"1-5", 1} or {"1-4", "1-2"}
-  local anim = anim8.newAnimation(grid(table.unpack(frames)), duration)
+  local anim = anim8.newAnimation(grid(_unpack(frames)), duration)
   return anim
 end
 
