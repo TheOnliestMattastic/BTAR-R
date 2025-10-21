@@ -34,9 +34,9 @@ function Character.new(class, x, y, stats)
 end
 
 -- Update animation
-function Character:update(dt)
-    self.anim:update(dt)
-end
+-- function Character:update(dt)
+--     self.anim:update(dt)
+-- end
 
 -- Draw character
 function Character:draw(tileSize)
