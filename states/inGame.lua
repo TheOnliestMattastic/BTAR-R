@@ -12,9 +12,9 @@ local START_AP = 3
 
 -- Fonts
 local fonts = {
-    small = love.graphics.newFont("alagard.ttf", 16),
-    medium = love.graphics.newFont("alagard.ttf", 26),
-    large = love.graphics.newFont("alagard.ttf", 50)
+    small = love.graphics.newFont("assets/fonts/alagard.ttf", 16),
+    medium = love.graphics.newFont("assets/fonts/alagard.ttf", 26),
+    large = love.graphics.newFont("assets/fonts/alagard.ttf", 50)
 }
 
 -- Tile data
@@ -28,30 +28,10 @@ for i = 1, 12 do
     tile.sprites[i] = love.graphics.newImage("sprites/tiles/marble_wall_"..i..".png")
 end
 
--- Character factory
-local function newCharacter(x, y, class, team, stats)
-    local spriteSheet = love.graphics.newImage("sprites/chars/"..class..".png")
-    local grid = anim8.newGrid(16, 16, spriteSheet:getWidth(), spriteSheet:getHeight())
-    return {
-        x = x, y = y,
-        hp = stats.hp or MAX_HP,
-        pwr = stats.pwr,
-        def = stats.def,
-        dex = stats.dex,
-        spd = stats.spd,
-        rng = stats.rng,
-        team = team,
-        class = class,
-        spriteSheet = spriteSheet,
-        anim = anim8.newAnimation(grid("1-2", 1), 1),
-        isSelected = false
-    }
-end
-
 -- Example team setup
 local characters = {
-    newCharacter(2, 4, "ninja", 0, {hp=25, pwr=8, def=2, dex=5, spd=5, rng=1}),
-    newCharacter(11, 7, "black_mage", 1, {hp=25, pwr=10, def=1, dex=2, spd=2, rng=5})
+    new("NinjaDark", 2, 4, {hp=25, pwr=8, def=2, dex=5, spd=5, rng=1, team=0}),
+    new("KnightSilver", 11, 7, {hp=25, pwr=10, def=1, dex=2, spd=2, rng=5, team=1})
 }
 
 -- Game state
