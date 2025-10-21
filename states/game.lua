@@ -4,14 +4,17 @@ local GameState             = require "core.gameState"
 local Map                   = require "core.map"
 local Combat                = require "core.combat"
 local AnimationRegistry     = require "core.animationRegistry"
+local TilesetRegistry       = require "core.tilesetRegistry"
 
 local game = {}
 local characters = {}
 local map
 local state
 local registry = AnimationRegistry.new()
+local tilesets = TilesetRegistry.new()
 registry:loadFX()
 registry:loadCharacters()
+tilesets:loadTilesets()
 
 function game.load()
     -- Load tile sprites
