@@ -29,9 +29,19 @@ function Map:draw(mouseX, mouseY)
             local col, row = tileTag:match("(%d+),(%d+)")
             col, row = tonumber(col), tonumber(row)
 
-            local quad = self.tileset.grid(col, row)
-            love.graphics.setColor(1, 1, 1, 1)
-            love.graphics.draw(self.tileset.image, quad, x, y)
+            -- anim8's grid(col,row) returns a list of quads (frames).
+            -- Use the first returned frame as the quad to draw.
+            local frames = self.tileset.grid(col, row)
+            local quad = nil
+            if type(frames) == 'table' then quad = frames[1] end
+            if quad then
+                love.graphics.setColor(1, 1, 1, 1)
+                love.graphics.draw(self.tileset.image, quad, x, y)
+            else
+                -- fallback: draw a placeholder rectangle if quad missing
+                love.graphics.setColor(1,0,1,0.5)
+                love.graphics.rectangle("fill", x, y, self.tileSize, self.tileSize)
+            end
 
             -- Highlight hovered tile
             if self:isHovered(x, y, mouseX, mouseY) then
