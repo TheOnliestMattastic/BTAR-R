@@ -3,7 +3,9 @@
 ## October 20, 2025
 
 ### What I Started With
+
 This project began as my final class project a few years ago: a tactical RPG prototype built in LÖVE (Lua). The original code worked, but it was very **monolithic**:
+
 - A single `inGame.lua` file handled map rendering, character logic, UI, and input all at once.
 - Game state was tracked in a global `game` table with cryptic indices (`game[1]`, `game[2]`, etc.).
 - Characters were stored in a giant `char` table with mixed data and flags.
@@ -14,6 +16,7 @@ It was a great learning experience, but not something I’d want to showcase.
 ---
 
 ### What I’ve Done So Far
+
 I’ve started **rebuilding the game from the ground up** with best practices in mind:
 
 1. **Modular Design**
@@ -33,6 +36,7 @@ I’ve started **rebuilding the game from the ground up** with best practices in
 ---
 
 ### Why This Matters
+
 - **Readability**: Others can immediately see clean, modular code instead of one giant file.
 - **Scalability**: Adding new classes, maps, or abilities will be data‑driven, not hard‑coded.
 - **Professionalism**: The repo will include a polished `README.md` and this `devlog.md` to show my growth and thought process.
