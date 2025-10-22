@@ -144,12 +144,6 @@ function game.draw()
         e.fx.anim:draw(e.fx.image, e.x * map.tileSize, e.y * map.tileSize)
     end
 
-    -- Example: draw turn indicator
-    local btn = ui:get("button", "normal")
-    if btn and btn.image and btn.quad then
-        love.graphics.draw(btn.image, btn.quad, 400, 300)
-    end
-
     -- draw message
     if game.message then
         love.graphics.setColor(1,1,1,1)
