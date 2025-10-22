@@ -50,6 +50,8 @@ tilesets:loadTilesets()
 ui:loadUI()
 
 function game.load()
+    print("game.load() called") -- ADDED: Debug print
+
     -- Build map layout from a tileset spritesheet (use TilesetRegistry)
     -- Get the tileset (tag must match config/tilesets.lua)
     local tilesetTag = "grass"
@@ -58,6 +60,10 @@ function game.load()
     -- compute how many frames (cols/rows) the tileset contains
     local atlasCols = math.floor(tileset.image:getWidth() / tileset.frameW)
     local atlasRows = math.floor(tileset.image:getHeight() / tileset.frameH)
+    if atlasCols == 0 or atlasRows == 0 then
+        error("Tileset has zero width or height frames. Check frameW/frameH in config/tilesets.lua for " .. tilesetTag)
+        return
+    end
 
     -- choose map size (fit to window or fixed size)
     local tileSize = 32
@@ -81,8 +87,23 @@ function game.load()
         error("Tileset not found: " .. tostring(tilesetTag))
     end
 
-    map = Map.new(tileSize, layout, tilesets, tilesetTag)
+     if not tileset then
+        error("Tileset is nil after tilesets:getTileset()")
+        return
+    end
+
+    -- Initialize map and handle potential errors
+    local newMap, err = pcall(Map.new, tileSize, layout, tilesets, tilesetTag)
+    if not newMap then
+        error("Failed to create map: " .. tostring(err))
+    end
+    map = newMap
     state = GameState.new()
+
+    if not map then
+        error("Map is nil after Map.new()")
+        return
+    end
 
     -- Create characters
     local ninjaDark = Character.new("ninjaDark", 2, 4, {hp=25, pwr=5, def=2, dex=5, spd=4, rng=2, team=0})
@@ -152,11 +173,15 @@ function game.draw()
 end
 
 function game.mousepressed(x, y, button)
+
+    if not map then
+        error("Map is nil at start of mousepressed!")
+    end
     if state.over then return end
 
     if button ~= 1 then return end
 
-    local hovered = map:getHoveredTile()
+    local hovered = map:getHoveredTile(x, y)
     if not hovered then return end
     local col, row = hovered[1], hovered[2]
 
@@ -239,5 +264,19 @@ function game.mousepressed(x, y, button)
     -- After action, deselect
     game.selected = nil
 end
+
+function map:getHoveredTile(mouseX, mouseY)
+    local col = math.floor(mouseX / self.tileSize) + 1
+    local row = math.floor(mouseY / self.tileSize) + 1
+
+    if col >= 1 and col <= self.cols and row >= 1 and row <= self.rows then
+        return col, row
+    else
+        return nil
+    end
+end
+
+
+
 
 return game
