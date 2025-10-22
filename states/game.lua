@@ -50,8 +50,6 @@ tilesets:loadTilesets()
 ui:loadUI()
 
 function game.load()
-    print("game.load() called") -- ADDED: Debug print
-
     -- Build map layout from a tileset spritesheet (use TilesetRegistry)
     -- Get the tileset (tag must match config/tilesets.lua)
     local tilesetTag = "grass"
@@ -93,11 +91,7 @@ function game.load()
     end
 
     -- Initialize map and handle potential errors
-    local newMap, err = pcall(Map.new, tileSize, layout, tilesets, tilesetTag)
-    if not newMap then
-        error("Failed to create map: " .. tostring(err))
-    end
-    map = newMap
+    map = Map.new(tileSize, layout, tilesets, tilesetTag)
     state = GameState.new()
 
     if not map then
@@ -112,8 +106,6 @@ function game.load()
         ninjaDark.spriteSheet = charAnims.image
         ninjaDark.spriteImage = charAnims.image
         ninjaDark.anim = charAnims.animations.idle
-    else
-        print("Warning: missing animations for ninjaDark")
     end
     table.insert(characters, ninjaDark)
     charsByName.ninjaDark = ninjaDark
@@ -124,8 +116,6 @@ function game.load()
         gladiatorBlue.spriteSheet = charAnims.image
         gladiatorBlue.spriteImage = charAnims.image
         gladiatorBlue.anim = charAnims.animations.idle
-    else
-        print("Warning: missing animations for gladiatorBlue")
     end
     table.insert(characters, gladiatorBlue)
     charsByName.gladiatorBlue = gladiatorBlue
@@ -168,15 +158,11 @@ function game.draw()
     -- draw message
     if game.message then
         love.graphics.setColor(1,1,1,1)
-        love.graphics.print(game.message, 10, 10)
+        love.graphics.print(game.message, 1, 1, 0, 3)
     end
 end
 
 function game.mousepressed(x, y, button)
-
-    if not map then
-        error("Map is nil at start of mousepressed!")
-    end
     if state.over then return end
 
     if button ~= 1 then return end
