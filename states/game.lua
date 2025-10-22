@@ -199,13 +199,11 @@ function game.mousepressed(x, y, button)
         return
     end
 
------------------------------- TO DO!: Specify healing classes --------------------------------
     -- Prevent healer (class containing 'white_mage' or tag you use) from basic attacks
     if game.selected.isHealer then
         game.message = "Healer cannot perform basic attacks!" 
         return
     end
--------------------------------------------------------------------------------------
 
     -- Perform attack using Combat and handle result
     local res = Combat.attack(game.selected, clicked, state)
