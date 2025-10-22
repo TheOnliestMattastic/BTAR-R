@@ -21,8 +21,8 @@ end
 function Map:draw(mouseX, mouseY)
     for rowIndex, row in ipairs(self.layout) do
         for colIndex, tileTag in ipairs(row) do
-            local x = colIndex * self.tileSize
-            local y = rowIndex * self.tileSize
+            local x = (colIndex - 1) * self.tileSize
+            local y = (rowIndex - 1) * self.tileSize
 
             -- Each tileTag corresponds to a frame in the tileset grid
             -- Example: "1,1" means column 1, row 1 in the grid

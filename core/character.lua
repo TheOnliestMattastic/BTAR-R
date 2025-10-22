@@ -24,7 +24,7 @@ function Character.new(class, x, y, stats)
     -- State flags
     self.isSelected = false
     self.alive = true
-    self.isHealer = (class == whiteMage or class == sage)
+    self.isHealer = (class == "whiteMage" or class == "sage")
 
     -- Sprites & animation
     self.spriteSheet = love.graphics.newImage("assets/sprites/chars/"..class.."/SpriteSheet.png")
