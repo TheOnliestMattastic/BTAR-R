@@ -8,9 +8,7 @@ local registry = {}
 function M.setup()
     -- Debugger
     -- require known states; keep names in registry
-    print("states/init.lua: Switching to game state.")
     registry.game = require "states.game"
-    print("states/init.lua: Switching to menu state.")
     registry.menu = require "states.menu"
 end
 

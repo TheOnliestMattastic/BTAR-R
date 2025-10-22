@@ -1,6 +1,4 @@
 function love.load()
-    -- debugger
-    print("main.lua: love.load() called")
     -- loading libraries / modules
     States = require "States.init" -- loads States/init.lua
 
