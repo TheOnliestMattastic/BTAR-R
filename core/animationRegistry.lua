@@ -15,7 +15,6 @@ end
 
 local function makeAnimation(image, frameW, frameH, frames, duration)
   local grid = anim8.newGrid(frameW, frameH, image:getWidth(), image:getHeight())
-  local _unpack = table.unpack or unpack
   -- frames is a list like {"1-5", 1} or {"1-4", "1-2"}
   local anim = anim8.newAnimation(grid(_unpack(frames)), duration)
   return anim

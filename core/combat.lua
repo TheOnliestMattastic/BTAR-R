@@ -68,10 +68,10 @@ local CLASS = {
         white_mage = true,
     },
     slash = {
-        ninja = true, knight = true,
+        ninjaBlue = true, knight = true,
     },
     bash = {
-        paladin = true, dark_knight = true, battlemage = true,
+        gladiatorBlue = true, dark_knight = true, battlemage = true,
     },
     projectile = {
         scout = true, marksman = true, ranger = true,

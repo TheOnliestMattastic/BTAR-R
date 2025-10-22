@@ -5,7 +5,7 @@ Map.__index = Map
 function Map.new(tileSize, layout, tilesetRegistry, tilesetTag)
     local self = setmetatable({}, Map)
 
-    self.tileSize = tileSize or 48
+    self.tileSize = tileSize or 32
     self.layout = layout or {} -- 2D array of tile tags (strings)
     self.tileset = tilesetRegistry:getTileset(tilesetTag)
 

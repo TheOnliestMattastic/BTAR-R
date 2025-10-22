@@ -24,12 +24,20 @@ function Character.new(class, x, y, stats)
     -- State flags
     self.isSelected = false
     self.alive = true
+    self.isHealer = (class == whiteMage or class == sage)
 
     -- Sprites & animation
     self.spriteSheet = love.graphics.newImage("assets/sprites/chars/"..class.."/SpriteSheet.png")
     self.grid = anim8.newGrid(16, 16, self.spriteSheet:getWidth(), self.spriteSheet:getHeight())
 
     return self
+end
+
+function Character:update(dt)
+    if self.anim then
+        self.anim:update(dt)
+    end
+    
 end
 
 -- Draw character
