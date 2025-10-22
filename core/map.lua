@@ -47,6 +47,7 @@ function Map:draw(mouseX, mouseY)
             if self:isHovered(x, y, mouseX, mouseY) then
                 love.graphics.setColor(1, 1, 1, 0.4)
                 love.graphics.rectangle("fill", x, y, self.tileSize, self.tileSize)
+                self.hoveredTile = {colIndex - 1, rowIndex - 1}
             end
         end
     end
@@ -58,7 +59,7 @@ function Map:isHovered(x, y, mouseX, mouseY)
 end
 
 function Map:getHoveredTile(mouseX, mouseY)
-    return nil
+    return self.hoveredTile
 end
 
 return Map
