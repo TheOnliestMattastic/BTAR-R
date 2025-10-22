@@ -38,7 +38,7 @@ end
 function UIRegistry:get(tag, frameName)
     local entry = self.elements[tag]
     if not entry then return nil end
-    return { image=entry.image, quad=entry.quads[frameName] }
+    return { image=entry.image, quad=entry.quads[frameName],  }
 end
 
 return UIRegistry

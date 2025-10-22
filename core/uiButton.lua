@@ -40,7 +40,9 @@ function UIButton:draw()
     local entry = self.registry:get(self.tag, self.state)
     if entry then
         love.graphics.setColor(1,1,1,1)
-        love.graphics.draw(entry.image, entry.quad, self.x, self.y, 0, self.w / entry.image:getWidth(), self.h / entry.image:getHeight())
+        local _, _, quadW, quadH = entry.quad:getViewport()
+        local sx, sy = self.w / quadW, self.h / quadH
+        love.graphics.draw(entry.image, entry.quad, self.x, self.y, 0, sx, sy)
     else
         -- fallback: draw a rectangle if no sprite found
         love.graphics.setColor(0.6,0.6,0.6,1)
