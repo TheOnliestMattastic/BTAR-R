@@ -30,7 +30,7 @@ I’ve started **rebuilding the game from the ground up** with best practices in
 
 3. **Clearer Project Structure**
    - Planning a `/core` folder for reusable modules (`character.lua`, `map.lua`, `gameState.lua`, `ui.lua`).
-   - States (`menu.lua`, `game.lua`) will live in `/states`.
+   - States (`menu.lua`, `game.lua`) will live in `/States`.
    - Assets (sprites, fonts) are separated into `/assets`.
 
 ---
