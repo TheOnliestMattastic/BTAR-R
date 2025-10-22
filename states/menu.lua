@@ -8,7 +8,7 @@ registry:loadUI()
 local buttons = {}
 
 function menu.load()
-    table.insert(buttons, UIButton.new(winWidth*0.3, winHeight*0.6, winWidth*0.4, winHeight*0.15, "button", registry, function()
+    table.insert(buttons, UIButton.new(winWidth*0.3, winHeight*0.6, winWidth*0.4, winHeight*0.3, "button", registry, function()
         States.switch("game")
     end))
 end
