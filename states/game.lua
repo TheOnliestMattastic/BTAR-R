@@ -191,7 +191,7 @@ function game.mousepressed(x, y, button)
         return
     end
 
-    -- If clicked an ally: select them (no auto-heal)
+    -- If clicked an ally: select them
     if clicked and clicked.team == game.selected.team then
         game.selected = clicked
         game.message = "Selected buddy: " .. tostring(clicked.class or "unit")
@@ -251,16 +251,6 @@ function game.mousepressed(x, y, button)
     game.selected = nil
 end
 
-function map:getHoveredTile(mouseX, mouseY)
-    local col = math.floor(mouseX / self.tileSize) + 1
-    local row = math.floor(mouseY / self.tileSize) + 1
-
-    if col >= 1 and col <= self.cols and row >= 1 and row <= self.rows then
-        return col, row
-    else
-        return nil
-    end
-end
 
 
 
