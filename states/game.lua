@@ -17,17 +17,17 @@ game.message = nil
 
 -- Helpers
 local function findCharacterAt(col, row)
-    for _, c in ipairs(characters) do
-        if c.x == col and c.y == row and c.alive ~= false then
-            return c
+    for _, character in ipairs(characters) do
+        if character.x == col and character.y == row and character.alive ~= false then
+            return character
         end
     end
     return nil
 end
 
 local function removeCharacter(target)
-    for i, c in ipairs(characters) do
-        if c == target then
+    for i, character in ipairs(characters) do
+        if character == target then
             table.remove(characters, i)
             if target.team == 0 then
                 state.remaining.green = (state.remaining.green or 1) - 1
@@ -73,11 +73,11 @@ function game.load()
 
     -- build randomized layout where each cell is a string "col,row" matching Map expectations
     local layout = {}
-    for r = 1, mapRows do
-        layout[r] = {}
-        for c = 1, mapCols do
-            local tc = math.random(1, atlasCols) .. "," .. math.random(1, atlasRows)
-            layout[r][c] = tc
+    for row = 1, mapRows do
+        layout[row] = {}
+        for col = 1, mapCols do
+            local tileCoordinates = math.random(1, atlasCols) .. "," .. math.random(1, atlasRows)
+            layout[row][col] = tileCoordinates
         end
     end
 
@@ -129,14 +129,14 @@ function game.update(dt)
     state:checkWin()
 
     -- Update char and anim --
-    for _, c in ipairs(characters) do
-        if c.update then pcall(c.update, c, dt) end
-        if c.anim and c.anim.update then pcall(c.anim.update, c.anim, dt) end
+    for _, character in ipairs(characters) do
+        if character.update then pcall(character.update, character, dt) end
+        if character.anim and character.anim.update then pcall(character.anim.update, character.anim, dt) end
     end
 
     -- Update FX--
-    for _, e in ipairs(activeFX) do
-        if e.fx and e.fx.anim and e.fx.anim.update then pcall(e.fx.anim.update, e.fx.anim, dt) end
+    for _, activeEffect in ipairs(activeFX) do
+        if activeEffect.fx and activeEffect.fx.anim and activeEffect.fx.anim.update then pcall(activeEffect.fx.anim.update, activeEffect.fx.anim, dt) end
     end
 end
 
@@ -146,19 +146,19 @@ function game.draw()
     local mx, my = love.mouse.getPosition()
     map:draw(mx, my)
 
-    for _, c in ipairs(characters) do
+    for _, character in ipairs(characters) do
         -- Character:draw will handle anim drawing if character has anim/sheet set
-        pcall(function() c:draw(map.tileSize) end)
+        pcall(function() character:draw(map.tileSize) end)
         -- highlight selected
-        if game.selected == c then
+        if game.selected == character then
             love.graphics.setColor(1, 1, 0, 0.5)
-            love.graphics.rectangle("line", c.x * map.tileSize, c.y * map.tileSize, map.tileSize, map.tileSize)
+            love.graphics.rectangle("line", character.x * map.tileSize, character.y * map.tileSize, map.tileSize, map.tileSize)
             love.graphics.setColor(1,1,1,1)
         end
     end
 
-    for _,e in ipairs(activeFX) do
-        e.fx.anim:draw(e.fx.image, e.x * map.tileSize, e.y * map.tileSize)
+    for _,activeEffect in ipairs(activeFX) do
+        activeEffect.fx.anim:draw(activeEffect.fx.image, activeEffect.x * map.tileSize, activeEffect.y * map.tileSize)
     end
 
     -- draw message
