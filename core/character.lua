@@ -38,6 +38,23 @@ function Character:update(dt)
         self.anim:update(dt)
     end
     
+    -- Handle walking animation
+    if self.walkTarget then
+        self.walkProgress = self.walkProgress + dt * self.walkSpeed
+        if self.walkProgress >= 1 then
+            -- Animation complete
+            self.x = self.walkTarget.x
+            self.y = self.walkTarget.y
+            self.walkTarget = nil
+            self.walkStart = nil
+            self.walkProgress = 0
+        else
+            -- Interpolate position
+            local t = self.walkProgress
+            self.x = self.walkStart.x + (self.walkTarget.x - self.walkStart.x) * t
+            self.y = self.walkStart.y + (self.walkTarget.y - self.walkStart.y) * t
+        end
+    end
 end
 
 -- Draw character

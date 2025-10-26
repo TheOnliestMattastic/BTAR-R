@@ -208,10 +208,12 @@ function game.mousepressed(x, y, button)
    
     -- Move selected character to empty tile --
     if not clicked then
-        
-        game.selected.x = col
-        game.selected.y = row
-        game.message = "Moved to (" .. col .. ", " .. row .. ")"
+        -- Start walking animation
+        game.selected.walkTarget = {x = col, y = row}
+        game.selected.walkStart = {x = game.selected.x, y = game.selected.y}
+        game.selected.walkProgress = 0
+        game.selected.walkSpeed = 3  -- tiles per second
+        game.message = "Moving to (" .. col .. ", " .. row .. ")"
         return
     end
 
