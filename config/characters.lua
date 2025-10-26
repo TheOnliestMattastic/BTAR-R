@@ -7,7 +7,7 @@ return {
     animations = {
       idle   = { frames={1, 1}, duration=1 },
       walk   = { frames={1, "1-4"}, duration=0.15 },
-      attack = { frames={1, 5}, duration=0.10 },
+      attack = { frames={1, 5}, duration=0.025 },
     }
   },
 
@@ -16,7 +16,7 @@ return {
     animations = {
       idle   = { frames={1, 1}, duration=1 },
       walk   = { frames={1, "1-4"}, duration=0.15 },
-      attack = { frames={1, 5}, duration=0.10 },
+      attack = { frames={1, 5}, duration=0.025 },
     }
   },
 
