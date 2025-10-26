@@ -38,11 +38,11 @@ end
 function M.keypressed(key)
     if active and active.keypressed then active.keypressed(key) end
 
-    if state.over then
-        -- handle rematch/menu buttons
+    -- if state.over then
+    --     -- handle rematch/menu buttons
 
-        return
-    end
+    --     return
+    -- end
 
     if button == 1 then
         local hovered = map:getHoveredTile()

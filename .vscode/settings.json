@@ -3,5 +3,6 @@
         "winWidth",
         "winHeight",
         "love"
-    ]
+    ],
+    "editor.inlineSuggest.enabled": true
 }

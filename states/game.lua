@@ -123,20 +123,26 @@ function game.load()
 end
 
 function game.update(dt)
+    
+    -- Check win/loss and clamp AP --
     state:clampAP()
     state:checkWin()
 
+    -- Update char and anim --
     for _, c in ipairs(characters) do
         if c.update then pcall(c.update, c, dt) end
         if c.anim and c.anim.update then pcall(c.anim.update, c.anim, dt) end
     end
 
+    -- Update FX--
     for _, e in ipairs(activeFX) do
         if e.fx and e.fx.anim and e.fx.anim.update then pcall(e.fx.anim.update, e.fx.anim, dt) end
     end
 end
 
 function game.draw()
+
+    -- Draw map --
     local mx, my = love.mouse.getPosition()
     map:draw(mx, my)
 

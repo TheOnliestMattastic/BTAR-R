@@ -1,58 +1,79 @@
 <!-- .github/copilot-instructions.md
-     Purpose: Give AI coding assistants focused, repository-specific guidance so they
-     can be immediately productive editing and extending this LÖVE2D + Lua game.
+Purpose: Focused, repository‑specific guidance so AI coding agents can be immediately productive
+in editing and extending this LÖVE2D + Lua game (Battle Tactics Arena).
 -->
 
-# Quick agent instructions — Battle Tactics Arena
+# Copilot instructions — Battle Tactics Arena (concise)
 
-Keep this short and concrete. Prefer edits that match existing style (Lua, small modules,
-functional tables) and follow the file patterns under `core/`, `states/`, and `config/`.
+This file documents the concrete, repo‑specific patterns and APIs an AI agent should know.
+Keep edits small and follow the existing module style (Lua tables, small single‑responsibility modules).
 
-- Project type: LÖVE2D game written in Lua (single-process, single-threaded runtime).
-- Run locally with: `love .` (requires LÖVE2D installed; see `README.md`).
+- Project type: LÖVE2D game (Lua). Run locally with: `love .` (no build step).
+- Entry: `main.lua` → calls `states.setup()` and `states.switch("menu")`.
 
-Key directories and responsibilities
-- `main.lua` — entry point. Calls `states.setup()` and `states.switch("menu")` and sets window size.
-- `states/` — game states (e.g., `menu.lua`, `game.lua`). State modules expose `load`, `update`, `draw`, and input handlers (mouse/keyboard).
-- `core/` — small, single-responsibility modules:
-  - `core/gameState.lua` — turn/AP tracking and win logic. Use `state:spendAP(amount)` and `state:currentTeam()`.
-  - `core/map.lua` — tile layout drawing and hovered-tile detection. Tiles are identified by tags like "1,1" mapping to a tileset grid.
-  - `core/character.lua` — character data and simple methods (draw, moveTo, takeDamage, heal). Character sprite grid and anims are loaded per class.
-  - `core/combat.lua` — pure game logic for attack/heal resolution; returns structured result tables (ok, reason/type, animTag, etc.). Prefer calling this from UI/state code and drive FX from the returned table.
-  - `core/animationRegistry.lua` and `core/tilesetRegistry.lua` — centralized loading and cloning of anim8 animations and tileset grids. Use `registry:getCharacter(class)` and `tilesets:getTileset(tag)` to avoid reloading images.
+## Big picture (architecture & why)
+- Modular runtime: `main.lua` delegates to `states/*`. Each state (e.g., `states/game.lua`) manages UI + game objects.
+- Pure game logic lives in `core/` (no drawing): `combat`, `gameState`, `character`, `map`, registries. UI/state code composes these modules and drives animations/FX.
+- Asset registries (`core/animationRegistry.lua`, `core/tilesetRegistry.lua`) centralize image loading and produce prototype anims/grids; callers clone prototypes to avoid per‑frame reloads or mutation bugs.
+- Config driven: `config/*.lua` declares characters, tilesets, and FX; add data here to extend assets without changing core logic.
 
-Important patterns & conventions
-- Animation/tilesets: config-driven under `config/` (e.g., `config/characters.lua`, `config/tilesets.lua`, `config/fx.lua`). `AnimationRegistry:loadCharacters()` builds prototype anims; callers should clone via `getCharacter()` before mutating.
-- Naming: classes and registry keys use camelCase (e.g., `ninjaDark`, `gladiatorBlue`) matching folder names under `assets/sprites/chars/`.
-- Coordinates: Characters store integer tile coordinates `x,y`. `Map.tileSize` converts tiles → pixels. Use `map.tileSize` when drawing or placing FX.
-- Combat API: `Combat.attack(attacker, defender, state)` and `Combat.heal(attacker, target, state)` both validate team/range/AP and return a table with keys like `ok`, `type`, `result`, `animTag`, `damage`, `ko`, `reason`.
-- Side effects: Core modules generally do not mutate graphics state; `Combat` mutates Character HP/alive and `GameState` when AP is spent — UI should handle visual feedback using returned result tables.
+## Key files & responsibilities (examples)
+- `main.lua` — window setup and state switching.
+- `states/game.lua` — example orchestration: builds `Map`, loads `AnimationRegistry`/`TilesetRegistry`, creates `Character` instances, and handles mouse input to call `Combat.*` and spawn FX.
+- `core/combat.lua` — canonical API: `Combat.attack(attacker, defender, state)` and `Combat.heal(attacker, target, state)` return result tables (see below).
+- `core/gameState.lua` — AP & turn management: use `state:spendAP(amount)`, `state:currentTeam()`, `state:endTurn()`.
+- `core/animationRegistry.lua` — `loadCharacters()`, `loadFX()`, `getCharacter(class)` → returns {image, animations={...}} (cloned anims), `getFX(tag)` → {image, anim=clone}.
+- `core/map.lua` — layout is a 2D array of strings like "col,row" (e.g., "1,1"); `Map.tileSize` is the tile pixel size.
 
-Quick examples (follow these call sites)
-- Play an attack and spawn FX:
-  - call `local res = Combat.attack(attacker, defender, state)`
-  - if `res.ok and res.animTag` → `local fx = registry:getFX(res.animTag)` then `fx.anim:gotoFrame(1)` and `table.insert(activeFX, {fx=fx, x=defender.x, y=defender.y})`
-  - update remaining counts and remove units when `res.ko == true`.
-- Get character anims:
-  - `local charAnims = registry:getCharacter("NinjaDark")` returns `{ image, animations = { idle=..., walk=... } }`.
+## Concrete patterns / examples (copyable)
+- Combat call site (state code):
+  - local res = Combat.attack(attacker, defender, state)
+  - if not res.ok then handle error (res.reason)
+  - if res.animTag then local fx = registry:getFX(res.animTag); fx.anim:gotoFrame(1); table.insert(activeFX, {fx=fx, x=target.x, y=target.y})
+  - if res.ko then remove the unit and decrement `state.remaining` accordingly (see `states/game.lua`).
 
-Files to inspect for behavior and examples
-- `states/game.lua` — how map, registry, characters, FX, and `GameState` interact (draw/update/mousepressed patterns)
-- `core/animationRegistry.lua` and `core/tilesetRegistry.lua` — cloning pattern for anims and tilesets
-- `core/combat.lua` — canonical shape of result tables and helper functions (distance, pickAnimTag)
-- `config/characters.lua`, `config/tilesets.lua`, `config/fx.lua` — canonical config shapes for assets
+- AnimationRegistry usage:
+  - registry:loadCharacters()
+  - local proto = registry:getCharacter("ninjaDark")
+  - if proto then proto.animations.idle is safe to assign to a Character instance (it's already cloned).
 
-Developer workflows
-- Run game locally: `love .`
-- Image loading expects paths like `assets/sprites/chars/<Class>/SpriteSheet.png` and config paths in `config/*`.
-- No automated tests present; keep changes small and run the game to verify runtime behavior.
+- Map tiles and hovered tile:
+  - Layout cells are strings in `"col,row"` form. `Map.new(tileSize, layout, tilesets, tilesetTag)` expects that format.
+  - Use `map:getHoveredTile(x, y)` which returns the hovered tile coordinates (1‑based indices used in this repo).
 
-What to avoid / gotchas
-- Do not re-load images per-frame. Use the registries (`AnimationRegistry`, `TilesetRegistry`) to create shared prototypes and clone animations for instances.
-- `anim8` animations are mutated (use `:clone()` before modifying). See `AnimationRegistry:getCharacter` and `getFX`.
-- Coordinate mismatches: many modules assume top-left tile origin and 1-based Lua arrays; use existing `Map` helpers for hovered tiles.
+## Project conventions & gotchas (do these exactly)
+- Do NOT load images inside draw/update loops. Use the registries to load once and clone anims when needed.
+- `anim8` animations are mutated; always use `protoAnim:clone()` before mutating frames or switching speed.
+- Coordinates are tile indices (integers like `x=2, y=4`) and map draws using `x * map.tileSize` / `y * map.tileSize`.
+- Tileset frame tags are 1‑based strings (`"1,1"`). `Map:draw` expects these strings and uses the tileset grid accordingly.
 
-If you need more context
-- Read `README.md` for high-level goals; inspect `assets/` for class folders and `config/` for how animations/tiles are declared.
+## Integration points & extension notes
+- Add a new character class:
+  1. Add sprite sheet to `assets/sprites/chars/<class>/SpriteSheet.png`.
+  2. Add an entry in `config/characters.lua` with `path`, `frameW/frameH`, and `animations` (see existing entries).
+  3. Use `registry:loadCharacters()` at state init, then `local charAnims = registry:getCharacter("yourClass")` and assign `char.anim = charAnims.animations.idle`.
 
-If anything here is unclear, tell me which area (graphics, combat, state flow, or file X) and I'll expand with concrete examples or add missing config keys.
+- Add new FX:
+  - Add file under `assets/sprites/fx/`, add config in `config/fx.lua`, then call `registry:getFX(tag)` where needed.
+
+## Developer workflow & quick checks
+- Run: `love .` (LÖVE2D must be installed). No build step or tests in repo.
+- If the game errors at startup, the usual causes are missing assets or misconfigured `frameW/frameH` in `config/*`.
+- Use `print()` or `pcall()` in states for fast debugging. The code uses `pcall()` defensively in several places.
+
+## Minimal contract for changes (when editing core modules)
+- Inputs: keep function signatures unchanged where callers in `states/` expect them (e.g., `Combat.attack(attacker, defender, state)`).
+- Outputs: `Combat.*` must continue returning the result table shape `{ ok=bool, type=string, animTag=string?, result=..., damage=number?, ko=bool?, reason=string? }`.
+- Side effects: `Combat` may mutate `defender.hp`/`alive` and call `state:spendAP()`; do not mutate graphics or registries inside core logic.
+
+## Quick reference (files to open first)
+- `states/game.lua` — orchestration and examples of best practices
+- `core/combat.lua` — canonical result shapes
+- `core/animationRegistry.lua` — how to load & clone anims
+- `config/*.lua` — how to declare assets
+
+If you want, I can also:
+- add a short example PR that adds a new character config + sprite placeholder, and wire it into `states/game.lua` as a sample; or
+- expand this doc with a short checklist for adding new tilesets or an example of a failing runtime error and how to diagnose it.
+
+If any area is unclear (graphics, combat, state flow, or a specific file), tell me which one and I will expand with code snippets or a tiny automated sanity check.
