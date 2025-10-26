@@ -62,4 +62,18 @@ function Map:getHoveredTile(mouseX, mouseY)
     return self.hoveredTile
 end
 
+function Map:highlightMovementRange(selectedChar, isOccupied)
+    if not selectedChar then return end
+    love.graphics.setColor(0, 1, 0, 0.3)
+    for row = 0, self.rows - 1 do
+        for col = 0, self.cols - 1 do
+            local dist = math.max(math.abs(col - selectedChar.x), math.abs(row - selectedChar.y))
+            if dist <= selectedChar.spd and not isOccupied(col, row) then
+                love.graphics.rectangle("fill", col * self.tileSize, row * self.tileSize, self.tileSize, self.tileSize)
+            end
+        end
+    end
+    love.graphics.setColor(1, 1, 1, 1)
+end
+
 return Map

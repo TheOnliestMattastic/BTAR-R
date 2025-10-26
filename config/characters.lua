@@ -2,6 +2,12 @@
 -- Define per-class sprite sheet and animations
 -- Row (x in frames) = direction (1=down, 2=up, 3=left, 4=right)
 -- Col (y in frames) = animation frames
+-- Stats: hp  = health points
+--        pwr = multiplier for action strength
+--        def = points reduced from incoming damage
+--        dex = multiplier for accuracy and evasion
+--        spd = influences movement speed and turn order
+--        rng = range of attack
 return {
   ninjaDark = {
     path="assets/sprites/chars/ninjaDark/SpriteSheet.png", frameW=16, frameH=16,

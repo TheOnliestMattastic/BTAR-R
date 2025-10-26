@@ -7,6 +7,7 @@ local AnimationRegistry     = require "core.animationRegistry"
 local TilesetRegistry       = require "core.tilesetRegistry"
 local UIRegistry            = require "core.uiRegistry"
 local CharactersConfig      = require "config.characters"
+local GameHelpers           = require "core.gameHelpers"
 
 local game = {}
 local characters = {}
@@ -16,30 +17,7 @@ local state
 game.selected = nil
 game.message = nil
 
--- Helpers
-local function findCharacterAt(col, row)
-    for _, character in ipairs(characters) do
-        if character.x == col and character.y == row and character.alive ~= false then
-            return character
-        end
-    end
-    return nil
-end
 
-local function removeCharacter(target)
-    for i, character in ipairs(characters) do
-        if character == target then
-            table.remove(characters, i)
-            if target.team == 0 then
-                state.remaining.green = (state.remaining.green or 1) - 1
-            else
-                state.remaining.red = (state.remaining.red or 1) - 1
-            end
-            return true
-        end
-    end
-    return false
-end
 local registry = AnimationRegistry.new()
 local tilesets = TilesetRegistry.new()
 local activeFX = {}
@@ -49,6 +27,8 @@ registry:loadFX()
 registry:loadCharacters()
 tilesets:loadTilesets()
 ui:loadUI()
+
+GameHelpers.init(characters, state, game, registry, activeFX, Combat)
 
 function game.load()
     -- Build map layout from a tileset spritesheet (use TilesetRegistry)
@@ -144,6 +124,9 @@ function game.draw()
     local mx, my = love.mouse.getPosition()
     map:draw(mx, my)
 
+    -- Highlight movement range for selected character --
+    map:highlightMovementRange(game.selected, function(col, row) return GameHelpers.findCharacterAt(col, row) ~= nil end)
+
     for _, character in ipairs(characters) do
         -- Character:draw will handle anim drawing if character has anim/sheet set
         pcall(function() character:draw(map.tileSize) end)
@@ -168,46 +151,41 @@ end
 
 function game.mousepressed(x, y, button)
     if state.over then return end
-
     if button ~= 1 then return end
 
     local hovered = map:getHoveredTile(x, y)
     if not hovered then return end
     local col, row = hovered[1], hovered[2]
 
-    local clicked = findCharacterAt(col, row)
+    local clicked = GameHelpers.findCharacterAt(col, row)
 
-    -- If nothing selected yet --
-    if not game.selected then
-        if clicked then
-            game.selected = clicked
-            game.message = "Selected: " .. tostring(clicked.class or "unit")
-        else
-            game.message = nil
-        end
-        return
-    end
+    if GameHelpers.handleSelection(clicked) then return end
 
-    -- If clicked same as selected -> deselect --
+    -- If clicked same as selected -> deselect
     if clicked == game.selected then
         game.selected = nil
         game.message = nil
         return
     end
 
-    -- If clicked an ally -> select them --
+    -- If clicked an ally -> select them
     if clicked and game.selected:isAllyOf(clicked) then
         game.selected = clicked
         game.message = "Selected buddy: " .. tostring(clicked.class or "unit")
         return
     end
 
-    -- At this point, either clicked is enemy (attack target) or empty tile --
-   
-    -- Move selected character to empty tile --
+    -- At this point, either clicked is enemy (attack target) or empty tile
+
+    -- Move selected character to empty tile
     if not clicked then
-        game.selected:moveTo(col, row)
-        game.message = "Moving to (" .. col .. ", " .. row .. ")"
+        local dist = math.max(math.abs(col - game.selected.x), math.abs(row - game.selected.y))
+        if dist <= game.selected.spd then
+            game.selected:moveTo(col, row)
+            game.message = "Moving to (" .. col .. ", " .. row .. ")"
+        else
+            game.message = "Out of movement range"
+        end
         return
     end
 
@@ -218,45 +196,8 @@ function game.mousepressed(x, y, button)
         return
     end
 
-    -- Perform attack using Combat and handle result
-    local res = Combat.attack(game.selected, clicked, state)
-    if not res then
-        game.message = "No result from attack"
-        return
-    end
-
-    if not res.ok then
-        game.message = "Action failed: " .. tostring(res.reason or "unknown")
-        return
-    end
-
-    -- Play FX if specified
-    if res.animTag then
-        local fx = registry:getFX(res.animTag)
-        if fx then
-            fx.anim:gotoFrame(1)
-            table.insert(activeFX, {fx=fx, x=res.defender.x, y=res.defender.y})
-        end
-    end
-
-    -- Feedback messages for hit/miss/dodge
-    if res.type == "attack" then
-        if res.result == "hit" then
-            game.message = "Hit for " .. tostring(res.damage)
-            if res.ko then
-                game.message = game.message .. " - KO!"
-                -- remove unit and update counts
-                removeCharacter(res.defender)
-            end
-        elseif res.result == "miss" then
-            game.message = "Missed"
-        elseif res.result == "dodge" then
-            game.message = "Dodged"
-        end
-    end
-
-    -- After action, deselect
-    game.selected = nil
+    -- Perform attack
+    GameHelpers.performAttack(game.selected, clicked)
 end
 
 
