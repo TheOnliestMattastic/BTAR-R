@@ -25,6 +25,7 @@ function Character.new(class, x, y, stats)
     self.isSelected = false
     self.alive = true
     self.isHealer = (class == "whiteMage" or class == "sage")
+    self.direction = 1  -- 1=down, 2=up, 3=left, 4=right
 
     -- Sprites & animation
     self.spriteSheet = love.graphics.newImage("assets/sprites/chars/"..class.."/SpriteSheet.png")
@@ -48,10 +49,8 @@ function Character:update(dt)
             self.walkTarget = nil
             self.walkStart = nil
             self.walkProgress = 0
-            -- Switch back to idle
-            if self.animations and self.animations.idle then
-                self.anim = self.animations.idle
-            end
+            -- Switch back to idle with same direction
+            self:setAnim("idle")
         else
             -- Interpolate position --
             local t = self.walkProgress
@@ -82,29 +81,51 @@ function Character:heal(amount, maxHP)
     self.hp = math.min(self.hp + amount, maxHP or 25)
 end
 
--- Move with animation --
+-- Move with animation
 function Character:moveTo(x, y)
     self.walkTarget = {x = x, y = y}
     self.walkStart = {x = self.x, y = self.y}
     self.walkProgress = 0
-    self.walkSpeed = 3  -- tiles per second
-    -- Switch to walk animation
-    if self.animations and self.animations.walk then
-        self.anim = self.animations.walk
+    self.walkSpeed = 1  -- tiles per second
+    
+    -- Calculate direction based on movement
+    local dx = x - self.x
+    local dy = y - self.y
+    if math.abs(dy) > math.abs(dx) then
+        -- Vertical movement
+        self.direction = dy > 0 and 1 or 2  -- down or up
+    else
+        -- Horizontal movement
+        self.direction = dx > 0 and 4 or 3  -- right or left
     end
+    
+    -- Switch to walk animation with correct direction
+    self:setAnim("walk")
 end
 
--- Set animations from registry --
+-- Set animations from registry
 function Character:setAnimations(charAnims)
     if not charAnims then return end
     if charAnims.image then
         self.spriteSheet = charAnims.image
         self.spriteImage = charAnims.image
     end
-    if charAnims.animations then
-        self.animations = charAnims.animations
-        self.anim = charAnims.animations.idle
+    if charAnims.grid and charAnims.animDefs then
+        self.grid = charAnims.grid
+        self.animDefs = charAnims.animDefs
+        -- Set initial idle animation
+        self:setAnim("idle")
     end
+end
+
+-- Create and set animation based on name and current direction
+function Character:setAnim(animName)
+    if not self.animDefs or not self.grid then return end
+    local def = self.animDefs[animName]
+    if not def then return end
+    
+    -- Build frames with direction as row, cols from definition
+    self.anim = anim8.newAnimation(self.grid(self.direction, def.cols), def.duration)
 end
 
 -- Check if another character is an ally --

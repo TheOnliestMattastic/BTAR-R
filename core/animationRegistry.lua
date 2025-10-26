@@ -42,11 +42,13 @@ function AnimationRegistry:loadCharacters(configModule)
   local cfg = require(configModule or "config.characters")
   for class, def in pairs(cfg) do
     local image = loadImage(def.path)
-    local proto = {}
-    for name, animDef in pairs(def.animations) do
-      proto[name] = makeAnimation(image, def.frameW, def.frameH, animDef.frames, animDef.duration)
-    end
-    self.characters[class] = { image=image, proto=proto }
+    local grid = anim8.newGrid(def.frameW, def.frameH, image:getWidth(), image:getHeight())
+    -- Store animation definitions to create them dynamically based on direction
+    self.characters[class] = { 
+      image=image, 
+      grid=grid,
+      animDefs=def.animations 
+    }
   end
 end
 
@@ -57,15 +59,15 @@ function AnimationRegistry:getFX(tag)
   return { image=entry.image, anim=entry.protoAnim:clone() }
 end
 
--- Get character animations clone by class
+-- Get character data by class (image, grid, animation definitions)
 function AnimationRegistry:getCharacter(class)
   local entry = self.characters[class]
   if not entry then return nil end
-  local clones = {}
-  for name, protoAnim in pairs(entry.proto) do
-    clones[name] = protoAnim:clone()
-  end
-  return { image=entry.image, animations=clones }
+  return { 
+    image=entry.image, 
+    grid=entry.grid,
+    animDefs=entry.animDefs 
+  }
 end
 
 return AnimationRegistry
