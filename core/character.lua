@@ -38,18 +38,22 @@ function Character:update(dt)
         self.anim:update(dt)
     end
     
-    -- Handle walking animation
+    -- Handle walking animation --
     if self.walkTarget then
         self.walkProgress = self.walkProgress + dt * self.walkSpeed
         if self.walkProgress >= 1 then
-            -- Animation complete
+            -- Animation complete --
             self.x = self.walkTarget.x
             self.y = self.walkTarget.y
             self.walkTarget = nil
             self.walkStart = nil
             self.walkProgress = 0
+            -- Switch back to idle
+            if self.animations and self.animations.idle then
+                self.anim = self.animations.idle
+            end
         else
-            -- Interpolate position
+            -- Interpolate position --
             local t = self.walkProgress
             self.x = self.walkStart.x + (self.walkTarget.x - self.walkStart.x) * t
             self.y = self.walkStart.y + (self.walkTarget.y - self.walkStart.y) * t
@@ -57,14 +61,15 @@ function Character:update(dt)
     end
 end
 
--- Draw character
+-- Draw character --
 function Character:draw(tileSize)
     if not self.alive then return end
+    if not self.anim or not self.spriteSheet then return end
     love.graphics.setColor(1, 1, 1, 1)
     self.anim:draw(self.spriteSheet, self.x * tileSize, self.y * tileSize, nil, 2)
 end
 
--- Take damage
+-- Take damage --
 function Character:takeDamage(amount)
     self.hp = self.hp - math.max(0, amount - self.def)
     if self.hp <= 0 then
@@ -77,9 +82,42 @@ function Character:heal(amount, maxHP)
     self.hp = math.min(self.hp + amount, maxHP or 25)
 end
 
--- Move
+-- Move with animation --
 function Character:moveTo(x, y)
-    self.x, self.y = x, y
+    self.walkTarget = {x = x, y = y}
+    self.walkStart = {x = self.x, y = self.y}
+    self.walkProgress = 0
+    self.walkSpeed = 3  -- tiles per second
+    -- Switch to walk animation
+    if self.animations and self.animations.walk then
+        self.anim = self.animations.walk
+    end
+end
+
+-- Set animations from registry --
+function Character:setAnimations(charAnims)
+    if not charAnims then return end
+    if charAnims.image then
+        self.spriteSheet = charAnims.image
+        self.spriteImage = charAnims.image
+    end
+    if charAnims.animations then
+        self.animations = charAnims.animations
+        self.anim = charAnims.animations.idle
+    end
+end
+
+-- Check if another character is an ally --
+function Character:isAllyOf(other)
+    return other and self.team == other.team
+end
+
+-- Check if this character can perform a basic attack --
+function Character:canBasicAttack(target)
+    if self.isHealer then
+        return false, "Healer cannot perform basic attacks!"
+    end
+    return true
 end
 
 return Character

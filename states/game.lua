@@ -101,22 +101,12 @@ function game.load()
 
     -- Create characters
     local ninjaDark = Character.new("ninjaDark", 2, 4, {hp=25, pwr=5, def=2, dex=5, spd=4, rng=2, team=0})
-    local charAnims = registry:getCharacter("ninjaDark")
-    if charAnims and charAnims.image and charAnims.animations and charAnims.animations.idle then
-        ninjaDark.spriteSheet = charAnims.image
-        ninjaDark.spriteImage = charAnims.image
-        ninjaDark.anim = charAnims.animations.idle
-    end
+    ninjaDark:setAnimations(registry:getCharacter("ninjaDark"))
     table.insert(characters, ninjaDark)
     charsByName.ninjaDark = ninjaDark
 
     local gladiatorBlue = Character.new("gladiatorBlue", 4, 6, {hp=25, pwr=7, def=5, dex=2, spd=2, rng=1, team=1})
-    local charAnims = registry:getCharacter("gladiatorBlue")
-    if charAnims and charAnims.image and charAnims.animations and charAnims.animations.idle then
-        gladiatorBlue.spriteSheet = charAnims.image
-        gladiatorBlue.spriteImage = charAnims.image
-        gladiatorBlue.anim = charAnims.animations.idle
-    end
+    gladiatorBlue:setAnimations(registry:getCharacter("gladiatorBlue"))
     table.insert(characters, gladiatorBlue)
     charsByName.gladiatorBlue = gladiatorBlue
     -- etc...
@@ -131,7 +121,6 @@ function game.update(dt)
     -- Update char and anim --
     for _, character in ipairs(characters) do
         if character.update then pcall(character.update, character, dt) end
-        if character.anim and character.anim.update then pcall(character.anim.update, character.anim, dt) end
     end
 
     -- Update FX--
@@ -198,7 +187,7 @@ function game.mousepressed(x, y, button)
     end
 
     -- If clicked an ally -> select them --
-    if clicked and clicked.team == game.selected.team then
+    if clicked and game.selected:isAllyOf(clicked) then
         game.selected = clicked
         game.message = "Selected buddy: " .. tostring(clicked.class or "unit")
         return
@@ -208,18 +197,15 @@ function game.mousepressed(x, y, button)
    
     -- Move selected character to empty tile --
     if not clicked then
-        -- Start walking animation
-        game.selected.walkTarget = {x = col, y = row}
-        game.selected.walkStart = {x = game.selected.x, y = game.selected.y}
-        game.selected.walkProgress = 0
-        game.selected.walkSpeed = 3  -- tiles per second
+        game.selected:moveTo(col, row)
         game.message = "Moving to (" .. col .. ", " .. row .. ")"
         return
     end
 
-    -- Prevent healer (class containing 'white_mage' or tag you use) from basic attacks
-    if game.selected.isHealer then
-        game.message = "Healer cannot perform basic attacks!" 
+    -- Check if selected can attack target
+    local canAttack, reason = game.selected:canBasicAttack(clicked)
+    if not canAttack then
+        game.message = reason or "Cannot attack"
         return
     end
 
