@@ -1,6 +1,6 @@
 function love.load()
     -- loading libraries / modules
-    States = require "States.init" -- loads States/init.lua
+    States = require "states.init" -- loads States/init.lua
 
     -- setting window/resolution info
     winWidth = 960
