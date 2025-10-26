@@ -1,4 +1,4 @@
-# ⚔️ Battle Tactics Arena (Remastered)
+# ⚔️ Battle Tactics Arena: Refactored & Remastered
 
 ```txt
 ___________.__             ________         .__  .__                 __   
@@ -15,11 +15,12 @@ ___________.__             ________         .__  .__                 __
         \/     \/                \/     \/               \/               
 ```
 
-[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
-![Language](https://img.shields.io/badge/Lua-LÖVE2D-green)
-![Status](https://img.shields.io/badge/Status-WIP-yellow)
+[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-bd93f9?style=for-the-badge&logoColor=white&labelColor=6272a4)](https://creativecommons.org/licenses/by-sa/4.0/)
+![Language](https://img.shields.io/badge/Lua-LÖVE2D-bd93f9?style=for-the-badge&logo=githubpages&logoColor=white&labelColor=6272a4)
+![Status](https://img.shields.io/badge/Status-WIP-yellow?style=for-the-badge&logoColor=white&labelColor=6272a4)
 
 ## 🔭 Overview
+
 **Battle Tactics Arena (BTA)** is a **2D turn‑based tactical RPG prototype** built with **Lua** and the **LÖVE2D framework**.  
 
 Originally created as a class project, the game has been **rebuilt from the ground up** to showcase clean, modular design and professional coding practices.
@@ -33,8 +34,10 @@ Originally created as a class project, the game has been **rebuilt from the grou
 - Modular architecture for easy extension
 
 ## 🛠️ Refactor Journey
+
 The original prototype lived in a single `inGame.lua` file with global tables and hard‑coded logic.  
 The **remastered version** introduces:
+
 - **Modular design**: `/core`, `/states`, `/config` folders
 - **Encapsulated entities**: `Character`, `GameState`, `Combat`, `Map`
 - **Data‑driven configs**: Add new classes, FX, or tilesets without touching core logic
@@ -44,6 +47,7 @@ The **remastered version** introduces:
 This repo is both a **playable prototype** and a **portfolio piece** demonstrating my growth as a developer.
 
 ## 🎮 Gameplay
+
 - **Pass & Play**: Two players alternate turns on the same machine
 - **Action Points**: Spend AP to move, attack, or heal
 - **Victory Condition**: Eliminate all opposing units
@@ -52,14 +56,17 @@ This repo is both a **playable prototype** and a **portfolio piece** demonstrati
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - [LÖVE2D](https://love2d.org/) (11.3+ recommended)
 
 ### Run the Game
+
 ```bash
 love .
 ```
 
 ## 🗺️ Repo Structure
+
 ```
 /assets        → Sprites, tilesets, UI
 /core          → Game logic (character, combat, map, gameState, registries)
@@ -70,6 +77,7 @@ devlog.md      → Development log of the refactor
 ```
 
 ## ☄️ Skills Demonstrated
+
 - Lua scripting & LÖVE2D framework
 - Modular architecture & state management
 - Animation systems (`anim8`)
@@ -78,7 +86,7 @@ devlog.md      → Development log of the refactor
 
 ## 🛸 License
 
-
+This project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
 
 ## 👽 Contact
 
