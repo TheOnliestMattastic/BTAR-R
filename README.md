@@ -1,22 +1,36 @@
 # ⚔️ Battle Tactics Arena (Remastered)
 
+```txt
+___________.__             ________         .__  .__                 __   
+\__    ___/|  |__   ____   \_____  \   ____ |  | |__| ____   _______/  |_ 
+  |    |   |  |  \_/ __ \   /   |   \ /    \|  | |  |/ __ \ /  ___/\   __\
+  |    |   |   Y  \  ___/  /    |    \   |  \  |_|  \  ___/ \___ \  |  |  
+  |____|   |___|  /\___  > \_______  /___|  /____/__|\___  >____  > |__|  
+                \/     \/          \/     \/             \/     \/        
+   _____          __    __                   __  .__                      
+  /     \ _____ _/  |__/  |______    _______/  |_|__| ____                
+ /  \ /  \\__  \\   __\   __\__  \  /  ___/\   __\  |/ ___\               
+/    Y    \/ __ \|  |  |  |  / __ \_\___ \  |  | |  \  \___               
+\____|__  (____  /__|  |__| (____  /____  > |__| |__|\___  >              
+        \/     \/                \/     \/               \/               
+```
+
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 ![Language](https://img.shields.io/badge/Lua-LÖVE2D-green)
 ![Status](https://img.shields.io/badge/Status-WIP-yellow)
 
-## 📖 Overview
+## 🔭 Overview
 **Battle Tactics Arena (BTA)** is a **2D turn‑based tactical RPG prototype** built with **Lua** and the **LÖVE2D framework**.  
 
 Originally created as a class project, the game has been **rebuilt from the ground up** to showcase clean, modular design and professional coding practices.
 
-Features:
+## ✨ Features
+
 - Grid‑based tactical combat
 - Distinct character classes (ninja, gladiator, mage, ranger, etc.)
 - Action Point (AP) economy for movement, attacks, and heals
 - Animated sprites and FX powered by [`anim8`](https://github.com/kikito/anim8)
 - Modular architecture for easy extension
-
----
 
 ## 🛠️ Refactor Journey
 The original prototype lived in a single `inGame.lua` file with global tables and hard‑coded logic.  
@@ -29,15 +43,11 @@ The **remastered version** introduces:
 
 This repo is both a **playable prototype** and a **portfolio piece** demonstrating my growth as a developer.
 
----
-
 ## 🎮 Gameplay
 - **Pass & Play**: Two players alternate turns on the same machine
 - **Action Points**: Spend AP to move, attack, or heal
 - **Victory Condition**: Eliminate all opposing units
 - **Combat Resolution**: Hit, miss, dodge, and KO mechanics
-
----
 
 ## 🚀 Getting Started
 
@@ -49,9 +59,7 @@ This repo is both a **playable prototype** and a **portfolio piece** demonstrati
 love .
 ```
 
----
-
-## 📂 Project Structure
+## 🗺️ Repo Structure
 ```
 /assets        → Sprites, tilesets, UI
 /core          → Game logic (character, combat, map, gameState, registries)
@@ -61,25 +69,23 @@ love .
 devlog.md      → Development log of the refactor
 ```
 
----
-
-## 🧑‍💻 Skills Demonstrated
+## ☄️ Skills Demonstrated
 - Lua scripting & LÖVE2D framework
 - Modular architecture & state management
 - Animation systems (`anim8`)
 - Data‑driven design
 - Documentation & developer storytelling
 
----
-
-## 📜 License
+## 🛸 License
 
 
----
 
-## 👤 Author
-I’m **Matthew** — a CompTIA A+ certified technologist, indie game developer, and open‑source contributor.  
-I build tools, games, and automation that make tech more accessible, reliable, and fun.
+## 👽 Contact
 
-- [Portfolio](https://theonliestmattastic.github.io/)
-- [GitHub](https://github.com/TheOnliestMattastic)
+Curious about my projects? Want to collaborate or hire for entry-level IT/support/dev roles? Shoot me an email or connect on GitHub—I reply quickly and love new challenges.
+
+[![Portfolio](https://img.shields.io/badge/Portfolio-bd93f9?style=for-the-badge&logo=githubpages&logoColor=white&labelColor=6272a4)](https://theonliestmattastic.github.io/)  
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-bd93f9?style=for-the-badge&logo=github&logoColor=white&labelColor=6272a4)](https://github.com/theonliestmattastic)  
+[![Email](https://img.shields.io/badge/Email-matthew.poole485%40gmail.com-bd93f9?style=for-the-badge&logo=gmail&logoColor=white&labelColor=6272a4)](mailto:matthew.poole485@gmail.com)
+
+> “Sometimes the questions are complicated and the answers are simple.” — Dr. Seuss
