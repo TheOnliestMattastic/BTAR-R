@@ -1,13 +1,5 @@
 -- states/game.lua
-local Character             = require "core.character"
-local GameState             = require "core.gameState"
-local Map                   = require "core.map"
-local Combat                = require "core.combat"
-local AnimationRegistry     = require "core.animationRegistry"
-local TilesetRegistry       = require "core.tilesetRegistry"
-local UIRegistry            = require "core.uiRegistry"
-local CharactersConfig      = require "config.characters"
-local GameHelpers           = require "core.gameHelpers"
+local gameInit = require "core.gameInit"
 
 local game = {}
 local characters = {}
@@ -17,24 +9,24 @@ local state
 game.selected = nil
 game.message = nil
 
+-- Initialize dependencies
+local registry = gameInit.registry
+local tilesets = gameInit.tilesets
+local activeFX = gameInit.activeFX
+local ui = gameInit.ui
+local GameHelpers = gameInit.GameHelpers
 
-local registry = AnimationRegistry.new()
-local tilesets = TilesetRegistry.new()
-local activeFX = {}
-local ui = UIRegistry.new()
-
-registry:loadFX()
-registry:loadCharacters()
-tilesets:loadTilesets()
-ui:loadUI()
-
-GameHelpers.init(characters, state, game, registry, activeFX, Combat)
+gameInit.init(game, characters, state)
 
 function game.load()
     -- Build map layout from a tileset spritesheet (use TilesetRegistry)
     -- Get the tileset (tag must match config/tilesets.lua)
     local tilesetTag = "grass"
     local tileset = tilesets:getTileset(tilesetTag)
+    local CharactersConfig = gameInit.CharactersConfig
+    local Character = gameInit.Character
+    local GameState = gameInit.GameState
+    local Map = gameInit.Map
 
     -- compute how many frames (cols/rows) the tileset contains
     local atlasCols = math.floor(tileset.image:getWidth() / tileset.frameW)
