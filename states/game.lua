@@ -161,7 +161,7 @@ function game.draw()
         activeEffect.fx.anim:draw(activeEffect.fx.image, activeEffect.x * map.tileSize, activeEffect.y * map.tileSize)
     end
 
-    -- draw message
+    -- draw message --
     if game.message then
         love.graphics.setColor(1,1,1,1)
         love.graphics.print(game.message, 1, 1, 0, 3)
@@ -179,7 +179,7 @@ function game.mousepressed(x, y, button)
 
     local clicked = findCharacterAt(col, row)
 
-    -- If nothing selected yet
+    -- If nothing selected yet --
     if not game.selected then
         if clicked then
             game.selected = clicked
@@ -190,23 +190,28 @@ function game.mousepressed(x, y, button)
         return
     end
 
-    -- If clicked same as selected -> deselect
+    -- If clicked same as selected -> deselect --
     if clicked == game.selected then
         game.selected = nil
         game.message = nil
         return
     end
 
-    -- If clicked an ally: select them
+    -- If clicked an ally -> select them --
     if clicked and clicked.team == game.selected.team then
         game.selected = clicked
         game.message = "Selected buddy: " .. tostring(clicked.class or "unit")
         return
     end
 
-    -- At this point, either clicked is enemy (attack target) or empty tile
+    -- At this point, either clicked is enemy (attack target) or empty tile --
+   
+    -- Move selected character to empty tile --
     if not clicked then
-        game.message = "Nothing here."
+        
+        game.selected.x = col
+        game.selected.y = row
+        game.message = "Moved to (" .. col .. ", " .. row .. ")"
         return
     end
 
