@@ -6,14 +6,18 @@ local Combat                = require "core.combat"
 local AnimationRegistry     = require "core.animationRegistry"
 local TilesetRegistry       = require "core.tilesetRegistry"
 local UIRegistry            = require "core.uiRegistry"
+local Agent                 = require "core.agent"
 
 local game = {}
 local characters = {}
 local charsByName = {}
 local map
 local state
+local agentGreen
+local agentRed
 game.selected = nil
 game.message = nil
+game.agentMode = "none" -- "none", "green", "red", or "both"
 
 -- Helpers
 local function findCharacterAt(col, row)
@@ -99,6 +103,12 @@ function game.load()
         return
     end
 
+    -- Initialize AI agents
+    agentGreen = Agent.new(0, "normal") -- team 0 (green)
+    agentRed = Agent.new(1, "normal")   -- team 1 (red)
+    agentGreen.enabled = false -- disabled by default
+    agentRed.enabled = false
+
     -- Create characters
     local ninjaDark = Character.new("ninjaDark", 2, 4, {hp=25, pwr=5, def=2, dex=5, spd=4, rng=2, team=0})
     local charAnims = registry:getCharacter("ninjaDark")
@@ -127,6 +137,14 @@ function game.update(dt)
     -- Check win/loss and clamp AP --
     state:clampAP()
     state:checkWin()
+
+    -- Update agents
+    if game.agentMode == "green" or game.agentMode == "both" then
+        agentGreen:update(dt, characters, state, removeCharacter, activeFX, registry)
+    end
+    if game.agentMode == "red" or game.agentMode == "both" then
+        agentRed:update(dt, characters, state, removeCharacter, activeFX, registry)
+    end
 
     -- Update char and anim --
     for _, character in ipairs(characters) do
@@ -166,6 +184,11 @@ function game.draw()
         love.graphics.setColor(1,1,1,1)
         love.graphics.print(game.message, 1, 1, 0, 3)
     end
+
+    -- draw agent mode indicator
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.print("Agent Mode: " .. game.agentMode .. " [A] to toggle", winWidth - 350, 10, 0, 1.5)
+    love.graphics.print("Turn: " .. state:currentTeam() .. " | AP: " .. state.ap[state:currentTeam()], 10, winHeight - 30, 0, 1.5)
 end
 
 function game.mousepressed(x, y, button)
@@ -257,8 +280,39 @@ function game.mousepressed(x, y, button)
     game.selected = nil
 end
 
-
-
-
+function game.keypressed(key)
+    if key == "a" then
+        -- Toggle agent mode: none -> green -> red -> both -> none
+        if game.agentMode == "none" then
+            game.agentMode = "green"
+            agentGreen.enabled = true
+            agentRed.enabled = false
+            game.message = "Agent Mode: GREEN AI"
+        elseif game.agentMode == "green" then
+            game.agentMode = "red"
+            agentGreen.enabled = false
+            agentRed.enabled = true
+            game.message = "Agent Mode: RED AI"
+        elseif game.agentMode == "red" then
+            game.agentMode = "both"
+            agentGreen.enabled = true
+            agentRed.enabled = true
+            game.message = "Agent Mode: BOTH AI"
+        else
+            game.agentMode = "none"
+            agentGreen.enabled = false
+            agentRed.enabled = false
+            game.message = "Agent Mode: MANUAL"
+        end
+    elseif key == "space" then
+        -- End turn manually
+        if game.agentMode == "none" or 
+           (game.agentMode == "green" and state:currentTeam() == "red") or
+           (game.agentMode == "red" and state:currentTeam() == "green") then
+            state:endTurn()
+            game.message = "Turn ended. Now: " .. state:currentTeam()
+        end
+    end
+end
 
 return game
