@@ -4,5 +4,13 @@
         "winHeight",
         "love"
     ],
-    "editor.inlineSuggest.enabled": true
+
+	"Lua.workspace.library": [
+		"${3rd}/love2d/library",
+		"lib"
+	],
+	"Lua.runtime.version": "LuaJIT",
+	"Lua.workspace.checkThirdParty": false,
+    "editor.inlineSuggest.enabled": true,
+    "Lua.diagnostics.enable": true
 }
