@@ -5,6 +5,7 @@
 return {
   ninjaDark = {
     path="assets/sprites/chars/ninjaDark/SpriteSheet.png", frameW=16, frameH=16,
+    stats = { hp=25, pwr=5, def=2, dex=5, spd=4, rng=2 },
     animations = {
       idle   = { cols=1, duration=1 },
       walk   = { cols="1-4", duration=0.15 },
@@ -14,6 +15,7 @@ return {
 
   gladiatorBlue = {
     path="assets/sprites/chars/gladiatorBlue/SpriteSheet.png", frameW=16, frameH=16,
+    stats = { hp=25, pwr=7, def=5, dex=2, spd=2, rng=1 },
     animations = {
       idle   = { cols=1, duration=1 },
       walk   = { cols="1-4", duration=0.15 },

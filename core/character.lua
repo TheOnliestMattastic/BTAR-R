@@ -41,7 +41,7 @@ function Character:update(dt)
     
     -- Handle walking animation --
     if self.walkTarget then
-        self.walkProgress = self.walkProgress + dt * self.walkSpeed
+        self.walkProgress = self.walkProgress + dt * self.walkSpeed / self.walkDistance
         if self.walkProgress >= 1 then
             -- Animation complete --
             self.x = self.walkTarget.x
@@ -86,11 +86,12 @@ function Character:moveTo(x, y)
     self.walkTarget = {x = x, y = y}
     self.walkStart = {x = self.x, y = self.y}
     self.walkProgress = 0
-    self.walkSpeed = 1  -- tiles per second
-    
-    -- Calculate direction based on movement
+    self.walkSpeed = 3  -- tiles per second
+
+    -- Calculate distance for consistent speed
     local dx = x - self.x
     local dy = y - self.y
+    self.walkDistance = math.sqrt(dx * dx + dy * dy)
     if math.abs(dy) > math.abs(dx) then
         -- Vertical movement
         self.direction = dy > 0 and 1 or 2  -- down or up

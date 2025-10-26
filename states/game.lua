@@ -6,6 +6,7 @@ local Combat                = require "core.combat"
 local AnimationRegistry     = require "core.animationRegistry"
 local TilesetRegistry       = require "core.tilesetRegistry"
 local UIRegistry            = require "core.uiRegistry"
+local CharactersConfig      = require "config.characters"
 
 local game = {}
 local characters = {}
@@ -100,12 +101,20 @@ function game.load()
     end
 
     -- Create characters
-    local ninjaDark = Character.new("ninjaDark", 2, 4, {hp=25, pwr=5, def=2, dex=5, spd=4, rng=2, team=0})
+    local ninjaStats = CharactersConfig.ninjaDark.stats
+    local stats = {}
+    for k, v in pairs(ninjaStats) do stats[k] = v end
+    stats.team = 0
+    local ninjaDark = Character.new("ninjaDark", 2, 4, stats)
     ninjaDark:setAnimations(registry:getCharacter("ninjaDark"))
     table.insert(characters, ninjaDark)
     charsByName.ninjaDark = ninjaDark
 
-    local gladiatorBlue = Character.new("gladiatorBlue", 4, 6, {hp=25, pwr=7, def=5, dex=2, spd=2, rng=1, team=1})
+    local gladiatorStats = CharactersConfig.gladiatorBlue.stats
+    stats = {}
+    for k, v in pairs(gladiatorStats) do stats[k] = v end
+    stats.team = 1
+    local gladiatorBlue = Character.new("gladiatorBlue", 4, 6, stats)
     gladiatorBlue:setAnimations(registry:getCharacter("gladiatorBlue"))
     table.insert(characters, gladiatorBlue)
     charsByName.gladiatorBlue = gladiatorBlue
