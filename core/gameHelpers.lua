@@ -61,10 +61,10 @@ function GameHelpers.performAttack(attacker, defender)
     end
     -- Play FX if specified
     if res.animTag then
-        local fx = registry:getFX(res.animTag)
-        if fx then
-            fx.anim:gotoFrame(1)
-            table.insert(activeFX, {fx=fx, x=res.defender.x, y=res.defender.y})
+		local fx = registry:getFX(res.animTag)
+		if fx then
+			fx.anim:gotoFrame(1)
+			table.insert(activeFX, {fx=fx, x=res.defender.x, y=res.defender.y})
         end
     end
     -- Feedback messages for hit/miss/dodge

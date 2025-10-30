@@ -15,7 +15,7 @@ return {
     animations = {
       idle   = { cols=1, duration=1 },
       walk   = { cols="1-4", duration=0.15 },
-      attack = { cols=5, duration=0.025 },
+      attack = { cols=5, duration=0.005 },
     }
   },
 

@@ -6,7 +6,7 @@
 			"request": "launch",
 			"name": "Release",
 			"program": {
-				"command": "love"
+				"command": "./love.appimage"
 			},
 			"args": [
 				".",

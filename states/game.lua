@@ -16,8 +16,6 @@ local activeFX = gameInit.activeFX
 local ui = gameInit.ui
 local GameHelpers = gameInit.GameHelpers
 
-gameInit.init(game, characters, state)
-
 function game.load()
     -- Build map layout from a tileset spritesheet (use TilesetRegistry)
     -- Get the tileset (tag must match config/tilesets.lua)
@@ -27,6 +25,12 @@ function game.load()
     local Character = gameInit.Character
     local GameState = gameInit.GameState
     local Map = gameInit.Map
+
+    -- Check for tileset.image
+    if not tileset or not tileset.image then
+        error("Tileset or tileset.image is nil for " .. tilesetTag)
+        return
+    end
 
     -- compute how many frames (cols/rows) the tileset contains
     local atlasCols = math.floor(tileset.image:getWidth() / tileset.frameW)
@@ -67,6 +71,8 @@ function game.load()
     map = Map.new(tileSize, layout, tilesets, tilesetTag)
     state = GameState.new()
 
+    gameInit.init(game, characters, state)
+
     if not map then
         error("Map is nil after Map.new()")
         return
@@ -106,7 +112,18 @@ function game.update(dt)
 
     -- Update FX--
     for _, activeEffect in ipairs(activeFX) do
-        if activeEffect.fx and activeEffect.fx.anim and activeEffect.fx.anim.update then pcall(activeEffect.fx.anim.update, activeEffect.fx.anim, dt) end
+    	if activeEffect.fx and activeEffect.fx.anim and activeEffect.fx.anim.update then pcall(activeEffect.fx.anim.update, activeEffect.fx.anim, dt) end
+    end
+
+    -- Remove completed FX
+    local toRemove = {}
+    for i, activeEffect in ipairs(activeFX) do
+        if activeEffect.fx.anim.status == "paused" then
+            table.insert(toRemove, 1, i)
+        end
+    end
+    for _, i in ipairs(toRemove) do
+        table.remove(activeFX, i)
     end
 end
 
