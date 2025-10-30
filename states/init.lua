@@ -4,6 +4,8 @@ local StateManager = {}
 local currentState = nil
 local states = {}
 
+
+
 -- Load available state modules from the states/ folder
 function StateManager.setup()
 -- Require known states; keep names in states table
