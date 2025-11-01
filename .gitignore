@@ -1,0 +1,130 @@
+# LÖVE2D Game Development
+# Built game files
+*.love
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS-specific files
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# IDE/Editor files
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+*.code-workspace
+
+# Vim/Emacs
+*.swp
+*.swo
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Logs and debugging
+*.log
+logs/
+debug.log
+error.log
+
+# Screenshots and captures (if game generates them)
+screenshots/
+captures/
+
+# Game saves (when implemented)
+saves/
+*.sav
+
+# Build directories
+build/
+dist/
+release/
+
+# Lua bytecode
+*.luac
+
+# Third-party libraries (if not committed)
+# Uncomment if you want to ignore lib/ contents
+# lib/
+
+# Node.js (if using any JS tools)
+node_modules/
+npm-debug.log*
+
+# Python (if using any Python tools)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Temporary directories
+tmp/
+temp/
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# AI/ML Model files (if applicable)
+*.ckpt
+*.pth
+*.h5
+*.pkl
+*.pb
+*.onnx
+models/
+checkpoints/
+
+# AI Assistant/Coding Tool files
+.aider*
+.cursor/
+.windsurf/
+.claude/
+.chat/
+.gemini/
+.copilot/
+.tabnine/
+.github/copilot/
+.zed/
+
+# Serena AI tool
+.serena/
+
+# AI-generated content
+ai-generated/
+generated/
+
+# Datasets (if any)
+data/
+datasets/
+*.csv
+*.jsonl
